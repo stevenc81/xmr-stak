@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["./xmr-stak"]
+          args: ["--currency", "{{ .Values.xmrStak.currency }}", "-o", "{{ (index .Values.xmrStak.pool_list 0).pool_address }}", "-u", "{{ (index .Values.xmrStak.pool_list 0).wallet_address }}", "-p", "{{ (index .Values.xmrStak.pool_list 0).pool_password }}"]
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      priorityClassName: high-priority

@@ -10,6 +10,7 @@ config-debug.txt
 
 # tmp files
 *~
+.DS_Store
 
 # merge original backup files
 *.orig

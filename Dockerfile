@@ -1,5 +1,5 @@
 # Latest version of ubuntu
-FROM nvidia/cuda:9.0-base
+FROM nvidia/cuda:9.1-base-ubuntu17.04
 
 # Default git repository
 ENV GIT_REPOSITORY https://github.com/stevenc81/xmr-stak.git
@@ -16,11 +16,8 @@ RUN apt-get update \
     && cd - \
     && mv /xmr-stak/bin/* /usr/local/bin/ \
     && rm -rf /xmr-stak \
-    && apt-get purge -y -qq cmake cuda-core-9-0 git cuda-cudart-dev-9-0 libhwloc-dev libmicrohttpd-dev libssl-dev \
+    && apt-get purge -y -qq cmake git \
+    && apt-get autoremove -qq --purge \
     && apt-get clean -qq
-
-VOLUME /mnt
-
-WORKDIR /mnt
 
 ENTRYPOINT ["/usr/local/bin/xmr-stak"]
